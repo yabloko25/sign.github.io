@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div id="auth-container" class="bg-white p-8 rounded-lg shadow-md w-96">
+        <h2 id="form-title" class="text-2xl font-semibold text-center text-gray-800">Welcome, Sign up</h2>
+        <p class="text-center text-gray-600 mt-2 mb-6" id="form-subtitle">
+            It is our great pleasure to have you on board!
+        </p>
+        <form id="auth-form" class="space-y-4">
+            <input id="email" type="email" placeholder="Enter your Email" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required />
+            <input id="username" type="text" placeholder="Create your Login" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required />
+            <input id="password" type="password" placeholder="Create your Password" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required />
+            <button type="submit" class="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition">
+                Sign up
+            </button>
+        </form>
+        <p class="text-center text-gray-600 mt-4">
+            Already have an account? <a href="#" id="toggle-auth" class="text-blue-500">Sign in</a>
+        </p>
+    </div>
+    
+    <div id="profile-container" class="hidden bg-white p-8 rounded-lg shadow-md w-96">
+        <h2 class="text-2xl font-semibold text-center text-gray-800">Profile</h2>
+        <p class="text-center text-gray-600 mt-2">Welcome, <span id="profile-username"></span></p>
+        <button id="logout" class="w-full bg-red-500 text-white p-3 rounded-lg hover:bg-red-600 transition mt-4">Logout</button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const authForm = document.getElementById("auth-form");
+            const formTitle = document.getElementById("form-title");
+            const formSubtitle = document.getElementById("form-subtitle");
+            const toggleAuth = document.getElementById("toggle-auth");
+            const authContainer = document.getElementById("auth-container");
+            const profileContainer = document.getElementById("profile-container");
+            const profileUsername = document.getElementById("profile-username");
+            const logoutBtn = document.getElementById("logout");
+            
+            let isSignUp = true;
+            toggleAuth.addEventListener("click", () => {
+                isSignUp = !isSignUp;
+                formTitle.textContent = isSignUp ? "Welcome, Sign up" : "Welcome, Sign in";
+                formSubtitle.textContent = isSignUp ? "It is our great pleasure to have you on board!" : "Please enter your credentials to log in.";
+                toggleAuth.textContent = isSignUp ? "Sign in" : "Sign up";
+                document.getElementById("username").style.display = isSignUp ? "block" : "none";
+            });
+            
+            authForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const email = document.getElementById("email").value;
+                const username = document.getElementById("username").value;
+                const password = document.getElementById("password").value;
+                
+                if (email === "" || password === "" || (isSignUp && username === "")) {
+                    alert("Please fill in all fields");
+                    return;
+                }
+                
+                localStorage.setItem("email", email);
+                localStorage.setItem("username", username);
+                authContainer.classList.add("hidden");
+                profileContainer.classList.remove("hidden");
+                profileUsername.textContent = username;
+            });
+            
+            logoutBtn.addEventListener("click", () => {
+                localStorage.removeItem("email");
+                localStorage.removeItem("username");
+                authContainer.classList.remove("hidden");
+                profileContainer.classList.add("hidden");
+            });
+        });
+    </script>
+</body>
+</html>
